@@ -23,7 +23,7 @@ jobs:
           
           echo "Payload: $PAYLOAD"
           
-          RESPONSE=$(curl -s -L -w "\n%{http_code}" -X POST https://notchlog.com.br/api/v1/changelog \
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST https://ptyclwpofzwrfrcwdnfb.supabase.co/functions/v1/api-v1/changelog \
             -H "Authorization: Bearer $NOTCHLOG_API_KEY" \
             -H "Content-Type: application/json" \
             -d "$PAYLOAD")
