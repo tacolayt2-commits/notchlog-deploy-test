@@ -1,0 +1,22 @@
+name: Publish to Notchlog
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  publish-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Post to Notchlog
+        run: |
+          curl -X POST https://notchlog.com.br/api/v1/changelog \
+            -H "Authorization: Bearer ${{ secrets.NOTCHLOG_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "project_slug": "notchlog",
+              "title": "Novo Deploy: ${{ github.sha }}",
+              "content": "Deploy automático via GitHub Actions.",
+              "tag": "improvement",
+              "published": true
+            }'
