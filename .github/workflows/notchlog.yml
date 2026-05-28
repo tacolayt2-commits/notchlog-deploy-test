@@ -12,6 +12,8 @@ jobs:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
           COMMIT_SHA: ${{ github.sha }}
         run: |
+          echo "Key length: ${#NOTCHLOG_API_KEY}"
+          
           PAYLOAD=$(jq -n \
             --arg slug "notchlog" \
             --arg title "Deploy ${COMMIT_SHA:0:7}" \
