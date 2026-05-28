@@ -12,16 +12,19 @@ jobs:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
           COMMIT_SHA: ${{ github.sha }}
         run: |
-          echo "Key length: ${#NOTCHLOG_API_KEY}"
+          TITLE=$(echo "$COMMIT_MSG" | head -1)
+          CONTENT=$(echo "$COMMIT_MSG" | tail -n +3)
+          
+          if [ -z "$CONTENT" ]; then
+            CONTENT="Deploy ${COMMIT_SHA:0:7}"
+          fi
           
           PAYLOAD=$(jq -n \
             --arg slug "notchlog" \
-            --arg title "Deploy ${COMMIT_SHA:0:7}" \
-            --arg content "$COMMIT_MSG" \
+            --arg title "$TITLE" \
+            --arg content "$CONTENT" \
             --arg tag "feature" \
             '{project_slug: $slug, title: $title, content: $content, tag: $tag, published: true}')
-          
-          echo "Payload: $PAYLOAD"
           
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST https://ptyclwpofzwrfrcwdnfb.supabase.co/functions/v1/api-v1/changelog \
             -H "Authorization: Bearer $NOTCHLOG_API_KEY" \
